@@ -1,0 +1,64 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    box-sizing: border-box;
+    font-size: 1.4rem;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+html, body {
+    height: 100vh;
+}
+
+.homepage {
+    width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+}
+
+.header {
+    width: 100%;
+    background-color: #333;
+    color: #fff;
+    position: fixed;
+    top: 0;
+    z-index: 100;
+    height: 3rem;
+
+    &__content {
+        padding: .4rem;
+        h1 {
+            font-size: 2rem;
+        }
+    }
+}
+
+.main {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: .4rem;
+}
+
+.log-writer-container {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 3rem;
+    z-index: 100;
+    background-color: #eee;
+    padding: 1rem 0;
+}
+
+.logs-list-container {
+    position: relative;
+    margin-top: 3rem;
+}
