@@ -11,10 +11,12 @@ html {
 body {
     box-sizing: border-box;
     font-size: 1.4rem;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana,
+        sans-serif;
 }
 
-html, body {
+html,
+body {
     height: 100vh;
 }
 
@@ -34,10 +36,15 @@ html, body {
     height: 3rem;
 
     &__content {
-        padding: .4rem;
+        padding: 0.4rem;
+        display: flex;
+        justify-content: space-between;
+
         h1 {
             font-size: 2rem;
         }
+
+        //&__auth {}
     }
 }
 
@@ -46,7 +53,7 @@ html, body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: .4rem;
+    padding: 0.4rem;
 }
 
 .log-writer-container {

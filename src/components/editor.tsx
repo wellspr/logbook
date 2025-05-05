@@ -5,7 +5,7 @@ import { createLog, deleteLog, updateLog } from "@/actions/logs";
 import { useEditorContext } from "@/contexts/editorContext";
 import EditorJS, { OutputData } from "@editorjs/editorjs";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Log } from "../../generated/prisma";
+import { Log } from "@prisma/client";
 import Header from "@editorjs/header";
 import EditorjsList from "@editorjs/list";
 import Quote from "@editorjs/quote";

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.9.0",
     "@editorjs/code": "^2.9.3",
     "@editorjs/editorjs": "^2.30.8",
     "@editorjs/header": "^2.8.8",
@@ -19,6 +20,7 @@
     "@editorjs/underline": "^1.2.1",
     "@prisma/client": "^6.7.0",
     "next": "15.3.1",
+    "next-auth": "^5.0.0-beta.27",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
