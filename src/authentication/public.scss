@@ -1,0 +1,13 @@
+.public {
+    margin-top: 3rem;
+
+    background-color: antiquewhite;
+
+    flex-grow: 1;
+
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    justify-content: center;
+    align-items: center;
+}

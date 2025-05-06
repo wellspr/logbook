@@ -1,0 +1,45 @@
+.authenticated {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+
+    position: relative;
+    z-index: 100;
+
+    &__avatar {
+        img {
+            border: .1rem solid #aaa;
+            border-radius: 50%;
+        }
+    }
+
+    &__details {
+        position: absolute;
+        top: 3rem;
+        right: 0;  
+
+        background-color: #333;
+        font-size: 1.2rem;
+        padding: 1rem;
+
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+}
+
+.btn-auth {
+    background-color: #333;
+    color: #fff;
+    width: 100%;
+
+    &--signout {
+        background-color: #000;
+
+        &:hover {
+            background-color: #555;
+        }
+    }
+}
