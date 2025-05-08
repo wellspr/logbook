@@ -1,30 +1,29 @@
-import { LogsListComponent } from "@/components/logsListComponent";
 import { EditorContext } from "../contexts/editorContext";
-import { LogWriterComponent } from "@/components/LogWriterComponent";
-import { Authentication, Protected } from "../authentication";
-
+import { LogsListComponent } from "@/components/logsListComponent";
+import { LogWriterComponent } from "@/components/logWriterComponent";
+import { Protected } from "../authentication";
+import LogsListContainerClient from "./page.logsListContainer.client";
+import LogWriterContainerClient from "./page.logWriterContainer.client";
+import { Header } from "./header";
+import { fetchLogs } from "@/actions/logs";
 
 export default async function Homepage() {
+
+	const logs = await fetchLogs();
+
 	return (
 		<div className="homepage">
-			<header className="header">
-				<div className="header__content">
-					<h1>Logbook</h1>
-					<div className="header__content__auth">
-						<Authentication />
-					</div>
-				</div>
-			</header>
+			<Header />			
 
 			<main className="main">
 				<Protected>
-					<EditorContext>
-						<div className="log-writer-container">
+					<EditorContext serverLogs={logs}>
+						<LogWriterContainerClient>
 							<LogWriterComponent />
-						</div>
-						<div className="logs-list-container">
+						</LogWriterContainerClient>
+						<LogsListContainerClient>
 							<LogsListComponent />
-						</div>
+						</LogsListContainerClient>
 					</EditorContext>
 				</Protected>
 			</main>

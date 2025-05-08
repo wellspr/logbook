@@ -26,12 +26,12 @@ export const Editor = ({ log, editorMode = 'create' }: EditorProps) => {
     const ref = useRef<HTMLDivElement>(null);
     const editor = useRef<EditorJS>(null);
     const container = useRef<HTMLDivElement>(null);
-
     const [ready, setReady] = useState<boolean>(false);
-
-    const { updateLogs } = useEditorContext();
-
     const [mode, setMode] = useState<EditorMode>(editorMode);
+    const [currentLog, setCurrentLog] = useState<Log | undefined>(log);
+    const [loading, setLoading] = useState<boolean>(false);
+    const { updateLogs, logsContainerRef } = useEditorContext();
+    const [empty, setEmpty] = useState<boolean>(true);
 
     useEffect(() => {
 
@@ -40,7 +40,7 @@ export const Editor = ({ log, editorMode = 'create' }: EditorProps) => {
         if (ready) {
             const current = ref.current;
 
-            const data = log?.content ? JSON.parse(log.content) as OutputData : undefined;
+            const data = currentLog?.content ? JSON.parse(currentLog.content) as OutputData : undefined;
 
             if (current) {
                 editor.current = new EditorJS({
@@ -57,6 +57,14 @@ export const Editor = ({ log, editorMode = 'create' }: EditorProps) => {
                         inlineCode: InlineCode,
                         underline: Underline,
                         image: ImageTool,
+                    },
+                    onChange: async () => {
+                        const content = await editor.current?.save();
+                        if (content && content.blocks.length === 0) {
+                            setEmpty(true);
+                        } else {
+                            setEmpty(false);
+                        }
                     }
                 });
             }
@@ -67,7 +75,7 @@ export const Editor = ({ log, editorMode = 'create' }: EditorProps) => {
             editor.current = null;
             setReady(false);
         };
-    }, [ready, log, mode]);
+    }, [ready, currentLog, mode]);
 
     useEffect(() => {
         const onBodyClick = (e: MouseEvent) => {
@@ -94,24 +102,32 @@ export const Editor = ({ log, editorMode = 'create' }: EditorProps) => {
 
     const saveContent = useCallback(async () => {
         const content = await editor.current?.save();
+        if (!content) return;
+        setLoading(true);
         await createLog(JSON.stringify(content));
         await updateLogs();
         editor.current?.clear();
-    }, [updateLogs]);
+        logsContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+        setLoading(false);
+    }, [updateLogs, logsContainerRef]);
 
     const updateContent = useCallback(async () => {
+        setLoading(true);
         if (!log) return;
         if (!setMode) return;
         const content = await editor.current?.save();
-        await updateLog(log.id, JSON.stringify(content));
-        await updateLogs();
+        const updatedLog = await updateLog(log.id, JSON.stringify(content));
+        setCurrentLog(updatedLog);
         setMode("view");
-    }, [log, updateLogs]);
+        setLoading(false);
+    }, [log]);
 
     const deleteContent = useCallback(async () => {
+        setLoading(true);
         if (!log) return;
         await deleteLog(log.id);
         await updateLogs();
+        setLoading(false);
     }, [log, updateLogs]);
 
     const changeMode = useCallback((mode: EditorMode) => {
@@ -122,7 +138,7 @@ export const Editor = ({ log, editorMode = 'create' }: EditorProps) => {
     const date = data ? new Date(data.time as number) : null;
 
     return (
-        <div ref={container} className="editor">
+        <div ref={container} className={`editor editor__${mode}`}>
 
             <div className="editor__header">
                 <div className="editor__header__date">
@@ -131,22 +147,38 @@ export const Editor = ({ log, editorMode = 'create' }: EditorProps) => {
                 <div className="editor__header__buttons">
                     {
                         mode === 'edit' &&
-                        <button onClick={updateContent}>Update</button>
+                        <button className="btn editor__header__buttons__btn editor__header__buttons__btn--update"
+                            disabled={loading}
+                            onClick={updateContent}>
+                            Update
+                        </button>
                     }
 
                     {
                         mode === "view" &&
-                        <button className="edit-btn" onClick={() => changeMode("edit")}>Edit</button>
+                        <button className="btn edit-btn editor__header__buttons__btn editor__header__buttons__btn--edit"
+                            disabled={loading}
+                            onClick={() => changeMode("edit")}>
+                            Edit
+                        </button>
                     }
 
                     {
                         mode === "view" || mode === 'edit' &&
-                        <button onClick={deleteContent}>Delete</button>
+                        <button className="btn editor__header__buttons__btn editor__header__buttons__btn--delete"
+                            disabled={loading}
+                            onClick={deleteContent}>
+                            Delete
+                        </button>
                     }
 
                     {
                         mode === "edit" &&
-                        <button onClick={() => changeMode("view")}>Cancel</button>
+                        <button className="btn editor__header__buttons__btn editor__header__buttons__btn--cancel"
+                            disabled={loading}
+                            onClick={() => changeMode("view")}>
+                            Cancel
+                        </button>
                     }
                 </div>
             </div>
@@ -158,10 +190,16 @@ export const Editor = ({ log, editorMode = 'create' }: EditorProps) => {
                 <div className="editor__container__buttons">
                     {
                         mode === 'create' &&
-                        <button onClick={saveContent}>Save</button>
+                        <button className="btn editor__header__buttons__btn editor__header__buttons__btn--save"
+                            disabled={empty || loading}
+                            onClick={saveContent}>
+                            Save
+                        </button>
                     }
                 </div>
             </div>
+
+
         </div>
     );
 };

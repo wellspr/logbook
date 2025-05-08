@@ -1,15 +1,9 @@
 .log-writer {
-    //position: sticky;
-    //position: -webkit-sticky;
-    //top: 0;
-    //z-index: 100;
-    //background-color: #fff;
-
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    
+
     &__content {
         width: 100%;
         max-width: 60rem;
