@@ -1,13 +1,13 @@
 "use server";
 
 import { auth } from "@/auth";
-import { prisma } from "@/prismaClient"
+import { prisma } from "@/prismaClient";
 
 export const getUserId = async () => {
     const session = await auth();
 
     if (!session) {
-        throw new Error('Not authenticated');
+        return;
     }
 
     const user = await prisma.user.findUnique({
@@ -19,7 +19,7 @@ export const getUserId = async () => {
     await prisma.$disconnect();
 
     if (!user) {
-        throw new Error('User not found');
+        return;
     }
 
     const userId = user.id;
