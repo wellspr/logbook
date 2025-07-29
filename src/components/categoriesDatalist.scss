@@ -1,0 +1,16 @@
+.categories-datalist {
+    position: absolute;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    width: 12rem;
+    margin-top: 0.4rem;
+    padding: 1rem 0.6rem;
+    background-color: #eee;
+    border-radius: 0.4rem;
+    max-height: 10rem;
+    overflow-y: auto;
+
+    //&__btn {}
+}

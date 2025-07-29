@@ -1,0 +1,30 @@
+.categories {
+
+    &__actions {
+        &__editor {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+
+            &__input {
+                position: relative;
+                
+                input {
+                    width: 12rem;
+                    padding: 0.6rem 1.8rem;
+                    border: 0.1rem solid #333;
+                    border-radius: 0.4rem;
+                }
+            }
+        }
+
+        &__btn {
+            border: 0.1rem solid #333;
+            padding: .6rem 1.8rem;
+
+            &:disabled {
+                cursor: default;
+            }
+        }
+    }
+}

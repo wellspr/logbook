@@ -6,18 +6,22 @@ import LogsListContainerClient from "./page.logsListContainer.client";
 import LogWriterContainerClient from "./page.logWriterContainer.client";
 import { Header } from "./header";
 import { fetchLogs } from "@/actions/logs";
+import { getUserId } from "@/authentication/actions/user";
+import { fetchCategories } from "@/actions/categories";
 
 export default async function Homepage() {
 
 	const logs = await fetchLogs();
-
+	const categories = await fetchCategories();
+	const userId = await getUserId();
+	
 	return (
 		<div className="homepage">
 			<Header />			
 
 			<main className="main">
 				<Protected>
-					<EditorContext serverLogs={logs}>
+					<EditorContext serverLogs={logs} serverCategories={categories} userId={userId}> 
 						<LogWriterContainerClient>
 							<LogWriterComponent />
 						</LogWriterContainerClient>

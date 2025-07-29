@@ -1,0 +1,33 @@
+.categories {
+
+    &__list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .4rem;
+
+        &__item {
+            padding: .6rem 1.8rem;
+            border: 0.1rem solid #333;
+            border-radius: 0.4rem;
+
+            background-color: #333;
+            color: #eee;
+
+            position: relative;
+            font-size: 1.2rem;
+
+            &__btn {
+                padding: 0;
+                color: #eee;
+                background-color: #555;
+                position: absolute;
+                top: -.4rem;
+                right: -.4rem;
+                padding: .3rem;
+                border-radius: 100%;
+                width: 2rem;
+                height: 2rem;
+            }
+        }
+    }
+}

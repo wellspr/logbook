@@ -1,11 +1,9 @@
 'use client';
 
 import "./editor.scss";
-import { createLog, deleteLog, updateLog } from "@/actions/logs";
-import { useEditorContext } from "@/contexts/editorContext";
-import EditorJS, { OutputData } from "@editorjs/editorjs";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Log } from "@prisma/client";
+import { Category, Log } from "@prisma/client";
+import EditorJS, { OutputData } from "@editorjs/editorjs";
 import Header from "@editorjs/header";
 import EditorjsList from "@editorjs/list";
 import Quote from "@editorjs/quote";
@@ -13,15 +11,18 @@ import CodeTool from "@editorjs/code";
 import InlineCode from "@editorjs/inline-code";
 import Underline from "@editorjs/underline";
 import ImageTool from "@editorjs/image";
+import { useEditorContext } from "@/contexts/editorContext";
+import { Categories } from "./categories";
 
 export type EditorMode = "create" | "edit" | "view";
 
 interface EditorProps {
-    log?: Log
+    log?: Log; 
+    logCategories?: Category[];
     editorMode?: EditorMode;
 }
 
-export const Editor = ({ log, editorMode = 'create' }: EditorProps) => {
+export const Editor = ({ log, logCategories, editorMode = 'create' }: EditorProps) => {
 
     const ref = useRef<HTMLDivElement>(null);
     const editor = useRef<EditorJS>(null);
@@ -30,8 +31,9 @@ export const Editor = ({ log, editorMode = 'create' }: EditorProps) => {
     const [mode, setMode] = useState<EditorMode>(editorMode);
     const [currentLog, setCurrentLog] = useState<Log | undefined>(log);
     const [loading, setLoading] = useState<boolean>(false);
-    const { updateLogs, logsContainerRef } = useEditorContext();
     const [empty, setEmpty] = useState<boolean>(true);
+    const [categoriesToRemove, setCategoriesToRemove] = useState<string[]>([]);
+    const { createLog, updateLog, deleteLog, removeCategoriesFromLog } = useEditorContext();
 
     useEffect(() => {
 
@@ -39,7 +41,6 @@ export const Editor = ({ log, editorMode = 'create' }: EditorProps) => {
 
         if (ready) {
             const current = ref.current;
-
             const data = currentLog?.content ? JSON.parse(currentLog.content) as OutputData : undefined;
 
             if (current) {
@@ -104,34 +105,42 @@ export const Editor = ({ log, editorMode = 'create' }: EditorProps) => {
         const content = await editor.current?.save();
         if (!content) return;
         setLoading(true);
-        await createLog(JSON.stringify(content));
-        await updateLogs();
+        createLog(content);
         editor.current?.clear();
-        logsContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
         setLoading(false);
-    }, [updateLogs, logsContainerRef]);
+    }, [createLog]);
 
     const updateContent = useCallback(async () => {
         setLoading(true);
         if (!log) return;
         if (!setMode) return;
+    
+        /* If there are some categories (tags) to remove... */
+        if (categoriesToRemove.length > 0) {
+            await removeCategoriesFromLog(log.id, categoriesToRemove);
+        }
+
         const content = await editor.current?.save();
-        const updatedLog = await updateLog(log.id, JSON.stringify(content));
+        const updatedLog = await updateLog(log.id, content);
+
         setCurrentLog(updatedLog);
         setMode("view");
         setLoading(false);
-    }, [log]);
+    }, [log, updateLog, categoriesToRemove, removeCategoriesFromLog]);
 
     const deleteContent = useCallback(async () => {
         setLoading(true);
         if (!log) return;
         await deleteLog(log.id);
-        await updateLogs();
         setLoading(false);
-    }, [log, updateLogs]);
+    }, [log, deleteLog]);
 
     const changeMode = useCallback((mode: EditorMode) => {
         setMode(mode);
+
+        if (mode !== "edit") {
+            setCategoriesToRemove([]);
+        }
     }, [setMode]);
 
     const data = log ? JSON.parse(log.content) as OutputData : undefined;
@@ -198,8 +207,13 @@ export const Editor = ({ log, editorMode = 'create' }: EditorProps) => {
                     }
                 </div>
             </div>
-
-
+            <Categories
+                log={log}
+                logCategories={logCategories}
+                editMode={mode === 'edit'}
+                categoriesToRemove={categoriesToRemove}
+                setCategoriesToRemove={setCategoriesToRemove}
+            />
         </div>
     );
 };
