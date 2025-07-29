@@ -15,8 +15,25 @@ datasource db {
 }
 
 model Log {
-    id      String @id @default(auto()) @map("_id") @db.ObjectId
-    content String
+    id           String     @id @default(auto()) @map("_id") @db.ObjectId
+    content      String
+    createdAt    DateTime   @default(now())
+    updatedAt    DateTime   @updatedAt
+    categoryIds String[]   @db.ObjectId
+    categories   Category[] @relation(fields: [categoryIds], references: [id])
+    userId       String     @db.ObjectId
+    user         User       @relation(fields: [userId], references: [id])
+}
+
+model Category {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    name      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    logIds    String[] @db.ObjectId
+    logs      Log[]    @relation(fields: [logIds], references: [id])
+    userId    String   @db.ObjectId
+    user    User     @relation(fields: [userId], references: [id])
 }
 
 model User {
@@ -32,6 +49,10 @@ model User {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    logIds    String[] @db.ObjectId
+    logs      Log[]
+    categoryIds String[] @db.ObjectId
+    categories  Category[]
 }
 
 model Account {
