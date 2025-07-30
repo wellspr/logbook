@@ -7,7 +7,7 @@ import { CategoriesList } from "./categoriesList";
 import { CategoriesActions } from "./categoriesActions";
 
 interface CategoryProps {
-    log: Log & { categories?: Category[] } | undefined;
+    log?: Log & { categories?: Category[] };
     editMode: boolean;
     categoriesToRemove: string[];
     setCategoriesToRemove: Dispatch<SetStateAction<string[]>>

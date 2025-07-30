@@ -17,7 +17,7 @@ import { Categories } from "./categories";
 export type EditorMode = "create" | "edit" | "view";
 
 interface EditorProps {
-    log: Log & { categories?: Category[] } | undefined;
+    log?: Log & { categories?: Category[] };
     editorMode?: EditorMode;
 }
 
