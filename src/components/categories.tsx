@@ -7,8 +7,7 @@ import { CategoriesList } from "./categoriesList";
 import { CategoriesActions } from "./categoriesActions";
 
 interface CategoryProps {
-    log?: Log;
-    logCategories?: Category[];
+    log: Log & { categories?: Category[] } | undefined;
     editMode: boolean;
     categoriesToRemove: string[];
     setCategoriesToRemove: Dispatch<SetStateAction<string[]>>
@@ -16,16 +15,16 @@ interface CategoryProps {
 
 export const Categories = (props: CategoryProps) => {
 
-    const { log, logCategories, editMode, categoriesToRemove, setCategoriesToRemove } = props;
+    const { log, editMode, categoriesToRemove, setCategoriesToRemove } = props;
 
     /* These are the categories attributed to the log */
     const [currentLogCategories, setCurrentLogCategories] = useState<Category[]>([]);
 
     useEffect(() => {
-        if (log && logCategories) {
-            setCurrentLogCategories(logCategories);
+        if (log && log.categories) {
+            setCurrentLogCategories(log.categories);
         }
-    }, [log, logCategories]);
+    }, [log]);
 
     if (!log) return null;
 

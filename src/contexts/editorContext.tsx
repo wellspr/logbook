@@ -12,7 +12,7 @@ const scrollStore = localforage.createInstance({
 });
 
 type EditorContextInterface = {
-    logs: Log[] | undefined;
+    logs: Log[] & { categories?: Category[] } | undefined;
     categories: Category[] | undefined;
     createLog: (content: OutputData) => Promise<void>;
     updateLog: (logId: string, content: OutputData | undefined) => Promise<Log>;
@@ -29,7 +29,7 @@ const defaultValue: EditorContextInterface = {
     createLog: async () => { },
     updateLog: async () => { return {} as Log },
     deleteLog: async () => { },
-    createCategory: async () => {return {} as Category },
+    createCategory: async () => { return {} as Category },
     addCategoryToLog: async () => { },
     removeCategoriesFromLog: async () => { },
     logsContainerRef: { current: null }

@@ -17,12 +17,11 @@ import { Categories } from "./categories";
 export type EditorMode = "create" | "edit" | "view";
 
 interface EditorProps {
-    log?: Log; 
-    logCategories?: Category[];
+    log: Log & { categories?: Category[] } | undefined;
     editorMode?: EditorMode;
 }
 
-export const Editor = ({ log, logCategories, editorMode = 'create' }: EditorProps) => {
+export const Editor = ({ log, editorMode = 'create' }: EditorProps) => {
 
     const ref = useRef<HTMLDivElement>(null);
     const editor = useRef<EditorJS>(null);
@@ -209,7 +208,6 @@ export const Editor = ({ log, logCategories, editorMode = 'create' }: EditorProp
             </div>
             <Categories
                 log={log}
-                logCategories={logCategories}
                 editMode={mode === 'edit'}
                 categoriesToRemove={categoriesToRemove}
                 setCategoriesToRemove={setCategoriesToRemove}

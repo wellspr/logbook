@@ -37,7 +37,6 @@ export const LogsListComponent = () => {
                     .toReversed()
                     .map((log) => {
                         return (
-
                             <li key={log.id} className="logs__list__item">
                                 <Editor log={log} editorMode="view" />
                             </li>
